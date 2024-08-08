@@ -60,7 +60,8 @@ Cursor.lockState=CursorLockMode.None;
 Cursor.visible=true: làm cho con trỏ chuột hiển thị trên màn hình.
 
 CursorLockMode.None:cho phép con trỏ chuột di chuyển tự do trên màn hình mà không có bất kỳ hạn chế nào.
-CursorLockMode.Confined:con trỏ chuột được giới hạn trong cửa sổ trò chơi hoặc ứng dụng, nhưng vẫn có thể di chuyển tự do bên trong cửa sổ đó.
+CursorLockMode.Confined:con trỏ chuột được giới hạn trong cửa sổ trò chơi hoặc ứng dụng, nhưng vẫn có thể di chuyển tự 
+ bên trong cửa sổ đó.
 CursorLockMode.Locked:Chế độ này hoàn toàn khóa con trỏ chuột, ẩn nó khỏi tầm nhìn và hạn chế sự di chuyển của nó trong cửa sổ ứng dụng hoặc trò chơi. Con trỏ chuột không thể rời khỏi ranh giới của cửa sổ.
 ```
 
@@ -158,3 +159,78 @@ public class SomeScript : MonoBehaviour
  chỉ kiểm tra trạng thái kích hoạt của đối tượng cụ thể
  ## activeInHierarchy
   kiểm tra trạng thái kích hoạt của đối tượng cũng như trạng thái của các đối tượng cha hoặc con của nó.
+
+# OnMouseOver
+
+tương tác cới collider khi di chuột vào
+
+```CSharp
+ void OnMouseOver() {
+        Debug.Log(this.transform.name);
+    }
+void OnMouseOver() {
+       
+       if (Input.GetMouseButtonDown(0)) {
+         Debug.Log(this.transform.name);
+       }
+    }
+```
+
+# Mathf.RoundToInt
+ là một phương thức trong thư viện Mathf của Unity được sử dụng để làm tròn một số thực về số nguyên gần nhất. Nó làm tròn số thực đến số nguyên gần nhất và trả về kết quả dưới dạng một số nguyên.
+
+Ví dụ, nếu bạn có một số thực là 3.6, sau khi áp dụng Mathf.RoundToInt(3.6), bạn sẽ nhận được kết quả là 4.
+
+
+
+# ExecuteAlways
+ trên một script, script đó sẽ được thực thi cả trong Editor Mode và Play Mode. Điều này khác với [ExecuteInEditMode] chỉ thực thi trong Editor Mode.
+```CSharp
+[ExecuteAlways]
+public class ExampleClass : MonoBehaviour
+{
+    void Start()
+    {
+        if (Application.IsPlaying(gameObject))
+        {
+            // Play logic
+        }
+        else
+        {
+            // Editor logic
+        }
+    }
+}
+``` 
+# Post Processing
+để tạo những hậu kỳ màn lọc cho game
+
+tạo Game Object gắn post volumn -> tạo layer cao nhất
+
+gắn component post layer cho camera -> gắn layer cho post layer(COMPONENT)
+
+# SingleTon for soundfx
+để nhạc không chạy lại khi reset màn chơi thì dùng singleton
+```CS
+void Awake()
+    {
+        int numMusicPlayer = FindObjectsOfType<MusicPlayer>().Length;
+        if (numMusicPlayer > 1)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+    ```
+
+# SceneManager
+```cs
+int currentSceneIndex =SceneManager.GetActiveScene().buildIndex;
+        //GetActiveScene(): Hàm này trả về Scene hiện tại mà người chơi đang chơi trong game
+        //buildIndex:  trả về chỉ số (index) của Scene 
+        SceneManager.LoadScene(currentSceneIndex);
+    
+```
