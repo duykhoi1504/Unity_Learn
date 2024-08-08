@@ -224,7 +224,7 @@ void Awake()
             DontDestroyOnLoad(gameObject);
         }
     }
-    ```
+```
 
 # SceneManager
 ```cs
