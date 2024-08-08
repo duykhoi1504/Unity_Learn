@@ -40,3 +40,121 @@ không tích hợp trực tiếp với hệ thống UI, vì vậy nó thường 
         public int ammoAmount;
     }
 ```
+
+# Scroll chuot
+ if(Input.GetAxis("Mouse ScrollWheel")<0){}
+
+# Input GET MOUSE
+>Input.GetMouseButtonDown("0"): chuột trái
+>Input.GetMouseButtonDown("1"):  chuột phải
+>Input.GetButtonDown("Fire1"): chuột trái
+>Input.GetButtonDown("Fire2"): chuột phải
+
+# Cursor
+``` csharp
+Cursor.lockState=CursorLockMode.None;    
+     Cursor.visible=true;
+```
+
+``` csharp
+Cursor.visible=true: làm cho con trỏ chuột hiển thị trên màn hình.
+
+CursorLockMode.None:cho phép con trỏ chuột di chuyển tự do trên màn hình mà không có bất kỳ hạn chế nào.
+CursorLockMode.Confined:con trỏ chuột được giới hạn trong cửa sổ trò chơi hoặc ứng dụng, nhưng vẫn có thể di chuyển tự do bên trong cửa sổ đó.
+CursorLockMode.Locked:Chế độ này hoàn toàn khóa con trỏ chuột, ẩn nó khỏi tầm nhìn và hạn chế sự di chuyển của nó trong cửa sổ ứng dụng hoặc trò chơi. Con trỏ chuột không thể rời khỏi ranh giới của cửa sổ.
+```
+
+# Xoay enemy từ từ theo player khóa trục y
+```Csharp
+void FaceToTarget(){
+        // transform.LookAt(new Vector3(target.transform.position.x,0, target.transform.position.z));
+        Vector3 direction = (target.position-transform.position).normalized;
+        Debug.DrawRay(transform.position,direction,Color.green);
+        Quaternion lookRotation=Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
+        transform.rotation=Quaternion.Slerp(transform.rotation,lookRotation,Time.deltaTime*turnSpeed);
+    }
+```
+
+# LookRotation(hit.normal)
+```Csharp
+Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
+```
+Vector hit.normal đại diện cho pháp tuyến bề mặt tại điểm va chạm. Hàm LookRotation() sử dụng véc-tơ pháp tuyến này để xác định góc quay của đối tượng hitEffect, sao cho nó sẽ được định hướng vuông góc với bề mặt nơi xảy ra va chạm.
+
+# OnDrawGizmos()
+để vẽ vòng trong xung quanh enemy
+```Csharp
+ private void OnDrawGizmos() {
+           Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, chaseRange);
+ }
+ ```
+
+
+# Dictionary 
+là một cấu trúc dữ liệu. để tìm kiếm và truy cập dữ liệu dựa trên khóa.
+```CSharp
+public class Example : MonoBehaviour
+{
+    private Dictionary<string, int> scoreDictionary;
+ 
+    private void Start()
+    {
+        scoreDictionary = new Dictionary<string, int>();
+        // Thêm các cặp khóa-giá trị vào Dictionary
+        scoreDictionary.Add("Player1", 100);
+        scoreDictionary.Add("Player2", 200);
+        scoreDictionary.Add("Player3", 150);
+        int score = scoreDictionary["Player2"];
+        Debug.Log("Player2's score: " + score);
+        if (scoreDictionary.ContainsKey("Player3"))
+        {
+            Debug.Log("Player3's score exists!");
+        }
+ 
+        // Lặp qua tất cả các cặp khóa-giá trị trong Dictionary
+        foreach (KeyValuePair<string, int> kvp in scoreDictionary)
+        {
+            Debug.Log("Key: " + kvp.Key + ", Value: " + kvp.Value);
+        }
+ 
+        // Xóa một cặp khóa-giá trị khỏi Dictionary
+        scoreDictionary.Remove("Player1");
+    }
+}
+```
+
+# Particle System :"Simulation Space"
+
+>1.'<Local>': Khi Simulation Space được đặt thành Local, các hạt sẽ được mô phỏng trong không gian cục bộ của đối tượng chứa Particle System. Điều này có nghĩa là nếu bạn di chuyển đối tượng chứa Particle System, các hạt sẽ di chuyển theo cùng với nó.
+ 
+>2.'<World>': Khi Simulation Space được đặt thành World, các hạt sẽ được mô phỏng trong không gian toàn cầu của scene. Việc di chuyển đối tượng chứa Particle System không ảnh hưởng đến vị trí của các hạt.
+
+# Unity Editor
+Khi render thì những mã code có dùng Unity Editor sẽ ko được tích hợp vào trong game
+
+>một cách thông thường để xử lý việc tách Unity Editor liên quan khỏi ứng dụng cuối cùng là tạo một thư mục riêng gọi là "Editor" trong dự án Unity của bạn. Bạn có thể đặt các script chứa mã nguồn liên quan đến Unity Editor vào thư mục này.
+
+# ToolTip
+[Tooltip] trong Unity. Thuộc tính này được sử dụng để hiển thị thông báo gợi ý (tooltip) khi di chuột qua một trường dữ liệu hoặc một thuộc tính trên trình biên dịch Unity.
+
+```CS
+    [Tooltip("Adds amount to EnemyHP when thay dies.")]
+    [SerializeField] int difficultyRamp = 1;
+
+```
+
+# [RequireComponent(typeof(Enemy))]
+bạn đang đảm bảo rằng khi nào script này được thêm vào một đối tượng game, thành phần Enemy sẽ tự động được thêm vào nếu nó chưa tồn tại
+```CS
+[RequireComponent(typeof(Enemy))]
+public class SomeScript : MonoBehaviour
+{
+    // ...
+}
+```
+# activeSelf & activeInHierarchy
+## activeSelf
+ chỉ kiểm tra trạng thái kích hoạt của đối tượng cụ thể
+ ## activeInHierarchy
+  kiểm tra trạng thái kích hoạt của đối tượng cũng như trạng thái của các đối tượng cha hoặc con của nó.
