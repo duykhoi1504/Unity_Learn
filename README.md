@@ -25,9 +25,46 @@ cho phép bạn sử dụng các tính năng nâng cao của TextMeshPro
 không tích hợp trực tiếp với hệ thống UI, vì vậy nó thường được sử dụng cho các văn bản trong thế giới 3D.
 
 
+# ROTATION
+## Xoay đều đặng theo 1 hướng nào đó
+```CSharp
+ this.transform.Rotate(0,0,5*Time.deltaTime);
+```
+## set thẳng 1 góc quây về 1 hướng
+```CSharp
+this.transform.eulerAngles =new Vector3(90,0,0);
+```
+## liên tục quây về hướng của 1 vật thể khác    
+```CSharp
+this.transform.LookAt(_target);
+```
+## Muốn vật thể từ từ xoay đến vị trí chính xác
+```CSharp
+   Quaternion _targetAngle=new Quaternion();
+        _targetAngle.eulerAngles=new Vector3(0,90,0);
+        this.transform.rotation=Quaternion.RotateTowards(this.transform.rotation, _targetAngle, 5);
+```
+## Xoay enemy từ từ theo player khóa trục y
+```Csharp
+void FaceToTarget(){
+        // transform.LookAt(new Vector3(target.transform.position.x,0, target.transform.position.z));
+        Vector3 direction = (target.position-transform.position).normalized;
+        Debug.DrawRay(transform.position,direction,Color.green);
+        Quaternion lookRotation=Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
+        transform.rotation=Quaternion.Slerp(transform.rotation,lookRotation,Time.deltaTime*turnSpeed);
+    }
+```
+
+## LookRotation(hit.normal)
+```Csharp
+Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
+```
+Vector hit.normal đại diện cho pháp tuyến bề mặt tại điểm va chạm. Hàm LookRotation() sử dụng véc-tơ pháp tuyến này để xác định góc quay của đối tượng hitEffect, sao cho nó sẽ được định hướng vuông góc với bề mặt nơi xảy ra va chạm.
+
+
 # [System.Serializable] 
 được sử dụng để đánh dấu một class có thể được serialized, nghĩa là có thể lưu trữ và tải lại dữ liệu của object này.
-    cho phép các trường của class được hiển thị trong Unity Inspector,
+cho phép các trường của class được hiển thị trong Unity Inspector,
 
 
 ## code mẫu  
@@ -45,42 +82,22 @@ không tích hợp trực tiếp với hệ thống UI, vì vậy nó thường 
  if(Input.GetAxis("Mouse ScrollWheel")<0){}
 
 # Input GET MOUSE
->Input.GetMouseButtonDown("0"): chuột trái
->Input.GetMouseButtonDown("1"):  chuột phải
->Input.GetButtonDown("Fire1"): chuột trái
->Input.GetButtonDown("Fire2"): chuột phải
+Input.GetMouseButtonDown("0"): chuột trái
+Input.GetMouseButtonDown("1"):  chuột phải
+Input.GetButtonDown("Fire1"): chuột trái
+Input.GetButtonDown("Fire2"): chuột phải
 
 # Cursor
 ``` csharp
 Cursor.lockState=CursorLockMode.None;    
      Cursor.visible=true;
 ```
-
-``` csharp
 Cursor.visible=true: làm cho con trỏ chuột hiển thị trên màn hình.
-
 CursorLockMode.None:cho phép con trỏ chuột di chuyển tự do trên màn hình mà không có bất kỳ hạn chế nào.
 CursorLockMode.Confined:con trỏ chuột được giới hạn trong cửa sổ trò chơi hoặc ứng dụng, nhưng vẫn có thể di chuyển tự 
  bên trong cửa sổ đó.
 CursorLockMode.Locked:Chế độ này hoàn toàn khóa con trỏ chuột, ẩn nó khỏi tầm nhìn và hạn chế sự di chuyển của nó trong cửa sổ ứng dụng hoặc trò chơi. Con trỏ chuột không thể rời khỏi ranh giới của cửa sổ.
-```
 
-# Xoay enemy từ từ theo player khóa trục y
-```Csharp
-void FaceToTarget(){
-        // transform.LookAt(new Vector3(target.transform.position.x,0, target.transform.position.z));
-        Vector3 direction = (target.position-transform.position).normalized;
-        Debug.DrawRay(transform.position,direction,Color.green);
-        Quaternion lookRotation=Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
-        transform.rotation=Quaternion.Slerp(transform.rotation,lookRotation,Time.deltaTime*turnSpeed);
-    }
-```
-
-# LookRotation(hit.normal)
-```Csharp
-Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
-```
-Vector hit.normal đại diện cho pháp tuyến bề mặt tại điểm va chạm. Hàm LookRotation() sử dụng véc-tơ pháp tuyến này để xác định góc quay của đối tượng hitEffect, sao cho nó sẽ được định hướng vuông góc với bề mặt nơi xảy ra va chạm.
 
 # OnDrawGizmos()
 để vẽ vòng trong xung quanh enemy
