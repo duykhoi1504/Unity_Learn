@@ -251,3 +251,71 @@ int currentSceneIndex =SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
     
 ```
+
+# Action<int,Vector2>
+* Action<int,Vector2> là một delegate (một kiểu dữ liệu đặc biệt) trong C#.
+* Nó định nghĩa một hàm mà có thể nhận hai tham số: một int và một Vector2.
+* Ví dụ, bạn có thể sử dụng Action<int,Vector2> để định nghĩa một sự kiện "OnDamageTaken" trong một script, và các script khác có thể đăng ký với sự kiện này để xử lý khi một đối tượng chịu thiệt hại.
+```CSharp
+public class Enemy : MonoBehaviour
+{
+    public Action<int, Vector2> OnDamageTaken;
+
+    public void TakeDamage(int damage, Vector2 hitPosition)
+    {
+        // Xử lý logic khi đối tượng chịu thiệt hại
+        OnDamageTaken?.Invoke(damage, hitPosition);
+    }
+}
+```
+# Dictionary<TKey, TValue>
+* Dictionary<TKey, TValue> là một collection trong C# cho phép lưu trữ các cặp key-value.
+* Nó rất hữu ích khi bạn cần lưu trữ và truy xuất dữ liệu nhanh chóng dựa trên một khóa (key).
+* Ví dụ, bạn có thể sử dụng Dictionary<string, GameObject> để lưu trữ các GameObject trong game dựa trên tên của chúng.
+```CSharp
+public class GameManager : MonoBehaviour
+{
+    private Dictionary<string, GameObject> gameObjects = new Dictionary<string, GameObject>();
+
+    public void RegisterGameObject(string name, GameObject obj)
+    {
+        gameObjects[name] = obj;
+    }
+
+    public GameObject GetGameObject(string name)
+    {
+        if (gameObjects.TryGetValue(name, out var obj))
+            return obj;
+        else
+            return null;
+    }
+}
+```
+# List<T>
+* List<T> là một collection trong C# cho phép lưu trữ các phần tử của cùng một kiểu dữ liệu.
+* Nó rất hữu ích khi bạn cần lưu trữ và thao tác với một danh sách các đối tượng.
+* Ví dụ, bạn có thể sử dụng List<Enemy> để lưu trữ tất cả các đối tượng Enemy trong game.
+```CSharp
+public class GameManager : MonoBehaviour
+{
+    private List<Enemy> enemies = new List<Enemy>();
+
+    public void AddEnemy(Enemy enemy)
+    {
+        enemies.Add(enemy);
+    }
+
+    public void RemoveEnemy(Enemy enemy)
+    {
+        enemies.Remove(enemy);
+    }
+
+    public void UpdateEnemies()
+    {
+        foreach (var enemy in enemies)
+        {
+            enemy.Update();
+        }
+    }
+}
+```
