@@ -268,6 +268,35 @@ public class Enemy : MonoBehaviour
     }
 }
 ```
+## cách đăng kí sự kiện action trong c#
+* Khai báo sự kiện action: 
+```CSharp
+public static event Action<float, Vector2> OnDamageTaken;
+```
+* Khi muốn trigger sự kiện này, gọi sự kiện và truyền vào các tham số cần thiết:
+```CSharp
+protected virtual void TakeDamage(float amount, Vector2 damagePosition)
+{
+    OnDamageTaken?.Invoke(amount, damagePosition);
+}
+```
+* Để đăng ký sự kiện, bạn có thể làm như sau:
+```CSharp
+// Đăng ký sự kiện
+MyClass.OnDamageTaken += MyClass_OnDamageTaken;
+
+private static void MyClass_OnDamageTaken(float amount, Vector2 damagePosition)
+{
+    // Xử lý sự kiện tại đây
+    Console.WriteLine($"Took {amount} damage at {damagePosition}");
+}
+```
+* Để hủy đăng ký sự kiện, bạn có thể làm như sau:
+```CSharp
+// Hủy đăng ký sự kiện
+MyClass.OnDamageTaken -= MyClass_OnDamageTaken;
+```
+
 # Dictionary<TKey, TValue>
 * Dictionary<TKey, TValue> là một collection trong C# cho phép lưu trữ các cặp key-value.
 * Nó rất hữu ích khi bạn cần lưu trữ và truy xuất dữ liệu nhanh chóng dựa trên một khóa (key).
