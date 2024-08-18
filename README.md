@@ -123,8 +123,12 @@ public class Example : MonoBehaviour
         scoreDictionary.Add("Player1", 100);
         scoreDictionary.Add("Player2", 200);
         scoreDictionary.Add("Player3", 150);
+
+         // Accessing elements
         int score = scoreDictionary["Player2"];
         Debug.Log("Player2's score: " + score);
+
+        // Checking if a key exists
         if (scoreDictionary.ContainsKey("Player3"))
         {
             Debug.Log("Player3's score exists!");
@@ -365,4 +369,91 @@ Nếu bit được bật (kết quả khác 0), phương thức trả về true,
         private bool IsPlayerDetected(int layer,LayerMask layerMask){
         return (layerMask.value & (1<<layer))!=0;
     }
-    ```
+```
+# Detect dung` out
+* other.TryGetComponent(out Exp exp): Phương thức TryGetComponent được sử dụng để cố gắng lấy một component của một type cụ thể (trong trường hợp này là Exp) từ other GameObject. Nếu component được tìm thấy, nó sẽ được gán vào biến exp được định nghĩa bên ngoài.
+* Việc sử dụng out cho phép TryGetComponent trả về một giá trị boolean để chỉ ra liệu component đã được tìm thấy hay không. Nếu component được tìm thấy, true sẽ được trả về và exp sẽ được gán giá trị của component tương ứng. Nếu không, false sẽ được trả về và exp sẽ được gán giá trị null.
+* Lợi ích của việc sử dụng out là nó cho phép bạn kiểm tra sự tồn tại của một component mà không cần phải sử dụng các câu lệnh if-else rườm rà. Nếu không sử dụng out, bạn sẽ phải gọi GetComponent và sau đó kiểm tra xem nó có trả về null hay không.
+```cs
+private void OnTriggerEnter2D(Collider2D other) {
+    if(other.TryGetComponent(out Exp exp)){
+        if(!other.IsTouching(playerCD))
+            return;
+        Debug.Log("collected"+ exp.name);
+        Destroy(other.gameObject);
+    }
+}
+```
+
+# Acion event
+## Cách dùng
+1. Định nghĩa một event action:
+```cs
+public class GameEvents : MonoBehaviour
+{
+    public static event Action<Exp> OnExpCollected;
+
+    public static void TriggerExpCollected(Exp exp)
+    {
+        OnExpCollected?.Invoke(exp);
+    }
+}
+```
+2. Đăng ký lắng nghe sự kiện:
+```cs
+private void Start()
+{
+    GameEvents.OnExpCollected += HandleExpCollected;
+}
+
+private void OnDestroy()
+{
+    GameEvents.OnExpCollected -= HandleExpCollected;
+}
+
+private void HandleExpCollected(Exp exp)
+{
+    // Xử lý sự kiện khi thu thập Exp
+    Debug.Log("Collected " + exp.name);
+    Destroy(exp.gameObject);
+}
+```
+3. Kích hoạt sự kiện:
+```cs
+private void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.TryGetComponent(out Exp exp))
+    {
+        if (!other.IsTouching(playerCD))
+            return;
+        GameEvents.TriggerExpCollected(exp);
+    }
+}
+``` 
+## Lưu ý
+
+1. Gọi trực tiếp hàm thay vì gán delegate:
+Nếu bạn vô tình gọi hàm thay vì gán delegate, hàm sẽ được thực thi ngay lập tức.
+```cs
+Action action = SomeMethod(); // Hàm `SomeMethod()` sẽ được gọi ngay lập tức.
+```
+Để tránh gọi hàm, bạn cần gán một biểu thức lambda hoặc delegate:
+```cs
+Action action = () => SomeMethod(); // Gán delegate, không thực thi ngay lập tức.
+```
+Hoặc nếu SomeMethod không có tham số:
+```cs
+Action action = SomeMethod; // Cách gán này cũng sẽ không thực thi ngay lập tức.
+``` 
+2. Hàm được gọi bên trong phương thức trả về Action:
+Nếu bạn thực hiện một hành động nào đó trong quá trình tạo Action, hành động đó sẽ được thực thi ngay lập tức.
+```cs
+Action GetActionToPerform(out string buttonString)
+{
+    buttonString = "Test";
+
+    // Gọi hàm và trả về một Action
+    SomeMethod(); // Hàm này sẽ được gọi ngay lập tức.
+    return () => Debug.Log("This is the action!");
+}
+```
