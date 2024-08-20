@@ -490,3 +490,18 @@ bool exists = System.Enum.IsDefined(typeof(PlayerStats), "moveSpeed");
 ```cs
  PlayerStats randomStat = (PlayerStats)Random.Range(0, System.Enum.GetValues(typeof(PlayerStats)).Length);
  ```
+7. Debug để xem kết quả
+```cs
+  var values = System.Enum.GetValues(typeof(PlayerStats));
+        foreach (var value in values)
+        {
+            Debug.Log("Value: " + value);
+        }
+
+        // Lấy tất cả các tên của enum
+        var names = System.Enum.GetNames(typeof(PlayerStats));
+        foreach (var name in names)
+        {
+            Debug.Log("Name: " + name);
+        }
+```
